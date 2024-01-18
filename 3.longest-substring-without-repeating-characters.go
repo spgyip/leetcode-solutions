@@ -50,6 +50,7 @@
  *
  *
  */
+// Sliding window
 func lengthOfLongestSubstring(s string) int {
 	var m = make([]int, 256)
 	var left, right = 0, 0
