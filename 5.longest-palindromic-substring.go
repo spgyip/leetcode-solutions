@@ -42,7 +42,45 @@
  *
  *
  */
+
+// Dynamic programing
+//
+//	 dp(i, j) = true, dp(i+1, j-1)==true and s[i]==s[j]
+//		      = false, dp(i+1, j-1)==false or s[i]!=s[j]
 func longestPalindrome(s string) string {
+	n := len(s)
+	dp := make([][]int, n)
+
+	for i := 0; i < n; i++ {
+		dp[i] = make([]int, n)
+		dp[i][i] = 1
+	}
+
+	start, maxL := 0, 1
+	for wnd := 2; wnd <= n; wnd++ {
+		for i := 0; i <= n-wnd; i++ {
+			j := i + wnd - 1
+			if s[i] != s[j] {
+				dp[i][j] = 0
+				continue
+			}
+			if wnd == 2 || dp[i+1][j-1] == 1 {
+				dp[i][j] = 1
+			} else {
+				dp[i][j] = 0
+			}
+
+			if dp[i][j] == 1 && maxL < j-i+1 {
+				maxL = j - i + 1
+				start = i
+			}
+		}
+	}
+	return s[start : start+maxL]
+}
+
+// Strategy 2: Expand from center
+func longestPalindrome2(s string) string {
 	start, end := 0, 0
 	for i := 0; i < len(s); i++ {
 		n0 := expandPalindrome(s, i, i)
@@ -70,3 +108,4 @@ func max(x int, y int) int {
 	}
 	return y
 }
+
