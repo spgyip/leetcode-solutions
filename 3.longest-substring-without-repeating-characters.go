@@ -56,7 +56,7 @@ func lengthOfLongestSubstring(s string) int {
 	var left, right = 0, 0
 	var max = 0
 	for right < len(s) {
-		rc, lc := s[right], s[left]
+		rc := s[right]
 		if m[rc] == 0 {
 			m[rc] = 1
 			right++
@@ -67,6 +67,7 @@ func lengthOfLongestSubstring(s string) int {
 			continue
 		}
 
+		lc := s[left]
 		m[lc] = 0
 		left++
 	}
