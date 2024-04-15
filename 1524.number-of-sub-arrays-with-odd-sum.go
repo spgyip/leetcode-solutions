@@ -66,37 +66,23 @@
 
 const MASK = 1e+09 + 7
 
-// dp(i, j): Sum of subarray [i..j] is odd
-//
-// dp(i, i) = true,  arr[i] is odd
-//            false, arr[i] is not odd
-// dp(i, j) = true,  (dp(i, j-1) && !dp(j, j)) or (!dp(i, j-1) && dp(j, j))
-//            false, (dp(i, j-1) && dp(j, j)) or (!dp(i, j-1) && !dp(j, j))
 func numOfSubarrays(arr []int) int {
-	count := 0
-	n := len(arr)
+	// Total odd numbers
+	totalOdds := 0
 
-	var dp = make([][]bool, n)
-	for i := 0; i < n; i++ {
-		dp[i] = make([]bool, n)
+	// Even/Odd numbers of prefix [0...i]
+	prefixEvens, prefixOdds := 1, 0
 
-		// Initialize dp(i, i)
-		if arr[i]%2 != 0 {
-			dp[i][i] = true
-			count++
+	sum := 0
+	for _, x := range arr {
+		sum += x
+		if sum%2 == 0 {
+			totalOdds = (totalOdds + prefixOdds) % MASK
+			prefixEvens++
+		} else {
+			totalOdds = (totalOdds + prefixEvens) % MASK
+			prefixOdds++
 		}
 	}
-
-	for i := 0; i < n; i++ {
-		for j := i + 1; j < n; j++ {
-			if (dp[i][j-1] && !dp[j][j]) ||
-				(!dp[i][j-1] && dp[j][j]) {
-				dp[i][j] = true
-				count++
-			} else {
-				dp[i][j] = false
-			}
-		}
-	}
-	return count % MASK
+	return totalOdds
 }
